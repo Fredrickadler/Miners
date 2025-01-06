@@ -3,40 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Miner Bot</title>
+    <title>Loading</title>
     <style>
         body {
             background-color: black;
-            color: green;
+            color: white;
             font-family: Arial, sans-serif;
             text-align: center;
+            padding: 50px;
         }
-        .stats {
-            margin-top: 20px;
+        .loader {
+            border: 10px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 10px solid green;
+            width: 80px;
+            height: 80px;
+            animation: spin 2s linear infinite;
+            margin: 20px auto;
         }
-        .button {
-            display: inline-block;
-            background-color: green;
-            color: black;
-            padding: 10px 20px;
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        a {
+            color: green;
             text-decoration: none;
-            font-size: 16px;
-            border-radius: 5px;
-            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
-    <h1>Miner Bot</h1>
-    <p>Welcome to the Miner Bot Web Interface!</p>
-    <div class="stats">
-        <p><strong>Balance:</strong> {{ user_data['balance'] }}</p>
-        <p><strong>Energy:</strong> {{ user_data['energy'] }}</p>
-        <p><strong>Blocks Mined:</strong> {{ user_data['mined_blocks'] }}</p>
-        <p><strong>Total Blocks:</strong> {{ user_data['total_blocks'] }}</p>
-        <p><strong>Hash Rate:</strong> {{ user_data['hash_rate'] }} H/s</p>
-        <p><strong>Block Reward:</strong> {{ user_data['block_reward'] }}</p>
-    </div>
-    <a class="button" href="/start">Start Mining</a>
+    <div class="loader"></div>
+    <h1>برای ورود، 500 استارز پرداخت کنید</h1>
+    <a href="/payment">پرداخت 500 استارز</a>
 </body>
 </html>
