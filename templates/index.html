@@ -3,39 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Miner Interface</title>
+    <title>Miner Bot</title>
     <style>
         body {
-            background-color: #1e1e2f;
-            color: white;
             font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 50px;
+            background-color: #1c1c1c;
+            color: #d0d0d0;
+            margin: 0;
+            padding: 0;
         }
-        button {
-            background-color: #00b894;
-            color: white;
-            padding: 15px 30px;
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #2a2a2a;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        h1, h2 {
+            color: #77dd77;
+            text-align: center;
+        }
+        .card {
+            background-color: #333333;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        .card p {
+            margin: 5px 0;
+        }
+        .button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            text-align: center;
+            background-color: #77dd77;
+            color: #1c1c1c;
             border: none;
             border-radius: 5px;
-            font-size: 18px;
+            font-size: 16px;
             cursor: pointer;
-            margin-top: 20px;
+            margin-top: 10px;
         }
-        button:hover {
-            background-color: #00a078;
+        .button:hover {
+            background-color: #66cc66;
+        }
+        .footer {
+            display: flex;
+            justify-content: space-around;
+            background-color: #333333;
+            padding: 10px 0;
+            border-radius: 10px;
+        }
+        .footer div {
+            color: #77dd77;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
-    <h1>Welcome to the Miner Interface</h1>
-    <p>Click the button below to start mining:</p>
-    <button onclick="startMining()">Start Mining</button>
-
-    <script>
-        function startMining() {
-            alert("Mining has started! Check the Telegram bot for updates.");
-        }
-    </script>
+    <div class="container">
+        <h1>Miner Bot</h1>
+        <h2>Welcome to the Miner Bot Web Interface!</h2>
+        <div class="card">
+            <p><strong>Balance:</strong> 1,924.141</p>
+            <p><strong>Energy:</strong> 24,050</p>
+        </div>
+        <div class="card">
+            <p><strong>Block:</strong> #721,189</p>
+            <p><strong>Difficulty:</strong> 106.8K</p>
+            <p><strong>Reward:</strong> 1,237</p>
+        </div>
+        <div class="card">
+            <p><strong>Status:</strong> Waiting</p>
+            <p><strong>Hashes:</strong> 0</p>
+        </div>
+        <button class="button">Start Mining</button>
+    </div>
+    <div class="footer">
+        <div>MINING</div>
+        <div>UPGRADE</div>
+        <div>TASKS</div>
+        <div>STATS</div>
+        <div>WALLET</div>
+    </div>
 </body>
 </html>
