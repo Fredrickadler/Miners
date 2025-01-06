@@ -1,0 +1,27 @@
+
+body {
+    background: linear-gradient(135deg, #000000, #1c1c1c);
+    color: #00ff00;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+.container {
+    text-align: center;
+}
+button.start-mining {
+    background: #00ff00;
+    color: #000;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+}
+button.start-mining:hover {
+    background: #1c1c1c;
+    color: #00ff00;
+}
