@@ -3,7 +3,7 @@ import telebot
 
 app = Flask(__name__)
 
-BOT_TOKEN = "YOUR_BOT_TOKEN"  # جایگزین با توکن بات تلگرام
+BOT_TOKEN = "7745473410:AAFUmUC79yPnUV4-3IgpxPVnFFHsCLW7sD4"  # جایگزین با توکن بات تلگرام
 bot = telebot.TeleBot(BOT_TOKEN)
 
 @app.route("/")
