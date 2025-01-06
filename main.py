@@ -1,76 +1,97 @@
-from flask import Flask, render_template, request
-from telegram import Bot, Update
-from telegram.ext import Updater, CommandHandler, CallbackContext, Dispatcher
-import threading
+from flask import Flask, render_template, request, jsonify
+from telegram import Bot, Update, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.ext import CommandHandler, CallbackQueryHandler, Updater
+import json
 
-# --- تنظیمات توکن ---
-TELEGRAM_BOT_TOKEN = "توکن_ربات_خود_را_اینجا_قرار_دهید"
-WEBHOOK_URL = "https://miners-1.onrender.com"  # آدرس دامنه یا هاست
-
-# --- راه‌اندازی اپلیکیشن ---
 app = Flask(__name__)
+
+# Telegram Bot Token
+TELEGRAM_BOT_TOKEN = 'YOUR_TELEGRAM_BOT_TOKEN'
 bot = Bot(token=TELEGRAM_BOT_TOKEN)
 
-# --- متغیرهای ساده ---
-balance = 0
-energy = 100
-mining_status = "Waiting"
-mined_blocks = []
-current_block = {
-    "number": 0,
-    "reward": 0,
-    "difficulty": 0,
-}
+# User data
+users = {}
 
-# --- توابع مربوط به استخراج ---
-def start_mining():
-    global mining_status, mined_blocks, balance
-    mining_status = "Mining"
-    for i in range(1, 6):  # به‌عنوان مثال استخراج ۵ بلوک
-        block = {
-            "number": i,
-            "reward": 100,
-            "difficulty": 10 + i,
-        }
-        mined_blocks.append(block)
-        balance += block["reward"]
-    mining_status = "Completed"
+# Initialize data
+def load_data():
+    global users
+    try:
+        with open('data.json', 'r') as file:
+            users = json.load(file)
+    except FileNotFoundError:
+        users = {}
 
-@app.route("/")
+def save_data():
+    with open('data.json', 'w') as file:
+        json.dump(users, file)
+
+@app.route('/')
 def index():
-    global balance, energy, mining_status, mined_blocks
-    return render_template(
-        "index.html",
-        balance=balance,
-        energy=energy,
-        mining_status=mining_status,
-        mined_blocks=mined_blocks,
-    )
+    return render_template('index.html', users=users)
 
-@app.route("/start-mining", methods=["POST"])
-def start_mining_api():
-    mining_thread = threading.Thread(target=start_mining)
-    mining_thread.start()
-    return "Mining started!"
+@app.route('/api/start_mining', methods=['POST'])
+def start_mining():
+    user_id = request.json.get('user_id')
+    if user_id in users:
+        users[user_id]['blocks_mined'] += 1
+        users[user_id]['balance'] += users[user_id]['reward_per_block']
+        save_data()
+        return jsonify({'success': True, 'message': 'Mining started!'})
+    return jsonify({'success': False, 'message': 'User not found'})
 
-# --- توابع مربوط به ربات ---
-def start(update: Update, context: CallbackContext):
-    update.message.reply_text("Welcome to Miner Bot! Use /web to open the miner interface.")
+# Telegram Bot Handlers
+def start(update: Update, context):
+    user_id = str(update.message.chat_id)
+    if user_id not in users:
+        users[user_id] = {
+            'balance': 0,
+            'energy': 100,
+            'blocks_mined': 0,
+            'reward_per_block': 10
+        }
+        save_data()
 
-def web(update: Update, context: CallbackContext):
-    update.message.reply_text(f"Open the Miner Web Interface: {WEBHOOK_URL}")
+    keyboard = [
+        [InlineKeyboardButton("Start Mining", callback_data='start_mining')],
+        [InlineKeyboardButton("Upgrade", callback_data='upgrade')],
+        [InlineKeyboardButton("Wallet", callback_data='wallet')],
+        [InlineKeyboardButton("Stats", callback_data='stats')]
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    update.message.reply_text("Welcome to Miner Bot!", reply_markup=reply_markup)
 
-def setup_telegram_bot():
-    updater = Updater(token=TELEGRAM_BOT_TOKEN, use_context=True)
-    dp = updater.dispatcher
-    dp.add_handler(CommandHandler("start", start))
-    dp.add_handler(CommandHandler("web", web))
+def button_handler(update: Update, context):
+    query = update.callback_query
+    user_id = str(query.message.chat_id)
+
+    if query.data == 'start_mining':
+        if users[user_id]['energy'] > 0:
+            users[user_id]['blocks_mined'] += 1
+            users[user_id]['balance'] += users[user_id]['reward_per_block']
+            users[user_id]['energy'] -= 10
+            query.edit_message_text(f"Mining started! Blocks mined: {users[user_id]['blocks_mined']}")
+        else:
+            query.edit_message_text("Not enough energy!")
+    elif query.data == 'wallet':
+        query.edit_message_text(f"Balance: {users[user_id]['balance']} tokens")
+    elif query.data == 'stats':
+        query.edit_message_text(f"Stats:\nBalance: {users[user_id]['balance']} tokens\nBlocks mined: {users[user_id]['blocks_mined']}\nEnergy: {users[user_id]['energy']}")
+    elif query.data == 'upgrade':
+        query.edit_message_text("Upgrade functionality coming soon!")
+
+    save_data()
+
+# Telegram Bot Setup
+def setup_bot():
+    updater = Updater(TELEGRAM_BOT_TOKEN, use_context=True)
+    dispatcher = updater.dispatcher
+
+    dispatcher.add_handler(CommandHandler("start", start))
+    dispatcher.add_handler(CallbackQueryHandler(button_handler))
+
     updater.start_polling()
 
-# --- اجرای ربات ---
-telegram_thread = threading.Thread(target=setup_telegram_bot)
-telegram_thread.start()
-
-# --- اجرای وب ---
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+if __name__ == '__main__':
+    load_data()
+    setup_bot()
+    app.run(debug=True)
