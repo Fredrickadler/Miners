@@ -1,51 +1,46 @@
 from flask import Flask, render_template, request
-from telegram import Bot, Update
-from telegram.ext import Dispatcher, CommandHandler, MessageHandler, Filters
-import logging
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.ext import CommandHandler, CallbackContext, Updater
 
+# توکن بات تلگرام
 TOKEN = "7745473410:AAFUmUC79yPnUV4-3IgpxPVnFFHsCLW7sD4"
-URL = "https://miners-1.onrender.com"
 
+# آدرس سرور
+SERVER_URL = "https://miners-1.onrender.com"
+
+# ایجاد اپلیکیشن Flask
 app = Flask(__name__)
-bot = Bot(token=TOKEN)
 
-# Logging setup
-logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
-)
-logger = logging.getLogger(__name__)
-
+# مسیری برای صفحه وب ماینر
 @app.route("/")
 def index():
     return render_template("index.html")
 
-@app.route(f"/{TOKEN}", methods=["POST"])
-def webhook():
-    """Handle incoming updates from Telegram."""
-    update = Update.de_json(request.get_json(), bot)
-    dispatcher.process_update(update)
-    return "OK"
+# تابع شروع برای بات تلگرام
+def start(update: Update, context: CallbackContext):
+    # ایجاد دکمه "Open" با لینک به صفحه وب
+    keyboard = [[InlineKeyboardButton("Open", url=SERVER_URL)]]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    update.message.reply_text(
+        "Welcome to the Miner Bot! Click 'Open' to access the mining interface:",
+        reply_markup=reply_markup,
+    )
 
-def start(update: Update, context):
-    update.message.reply_text("Welcome to the Miner Bot!")
-
-def echo(update: Update, context):
-    update.message.reply_text(f"You said: {update.message.text}")
-
-def error(update: Update, context):
-    logger.warning(f"Update {update} caused error {context.error}")
-
-if __name__ == "__main__":
-    # Telegram Dispatcher setup
-    dispatcher = Dispatcher(bot, None, workers=0)
-
-    # Add command and message handlers
+# راه‌اندازی بات تلگرام
+def run_bot():
+    updater = Updater(TOKEN)
+    dispatcher = updater.dispatcher
     dispatcher.add_handler(CommandHandler("start", start))
-    dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, echo))
-    dispatcher.add_error_handler(error)
+    updater.start_polling()
+    updater.idle()
 
-    # Set webhook
-    bot.set_webhook(f"{URL}/{TOKEN}")
+# راه‌اندازی Flask و بات
+if __name__ == "__main__":
+    import threading
 
-    # Run Flask server
+    # اجرای بات تلگرام در یک رشته جداگانه
+    bot_thread = threading.Thread(target=run_bot)
+    bot_thread.start()
+
+    # اجرای اپلیکیشن Flask
     app.run(host="0.0.0.0", port=5000)
