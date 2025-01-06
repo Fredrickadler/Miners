@@ -4,16 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Miner Bot</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        body {
+            background-color: black;
+            color: green;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .stats {
+            margin-top: 20px;
+        }
+        .button {
+            display: inline-block;
+            background-color: green;
+            color: black;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-size: 16px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Miner Bot</h1>
-        <p>Welcome to the Miner Bot Web Interface!</p>
-        <div class="stats">
-            <h2>Global Stats</h2>
-            <p>Total Blocks Mined: {{ users|length }}</p>
-        </div>
+    <h1>Miner Bot</h1>
+    <p>Welcome to the Miner Bot Web Interface!</p>
+    <div class="stats">
+        <p><strong>Balance:</strong> {{ user_data['balance'] }}</p>
+        <p><strong>Energy:</strong> {{ user_data['energy'] }}</p>
+        <p><strong>Blocks Mined:</strong> {{ user_data['mined_blocks'] }}</p>
+        <p><strong>Total Blocks:</strong> {{ user_data['total_blocks'] }}</p>
+        <p><strong>Hash Rate:</strong> {{ user_data['hash_rate'] }} H/s</p>
+        <p><strong>Block Reward:</strong> {{ user_data['block_reward'] }}</p>
     </div>
+    <a class="button" href="/start">Start Mining</a>
 </body>
 </html>
