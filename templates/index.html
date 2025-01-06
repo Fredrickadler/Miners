@@ -6,87 +6,212 @@
     <title>Miner Bot</title>
     <style>
         body {
-            background-color: #121212;
-            color: #00ff88;
+            background-color: #1a1a1a;
+            color: #d1d1d1;
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
         }
-        .header {
-            text-align: center;
-            padding: 20px;
-            font-size: 24px;
-            border-bottom: 2px solid #00ff88;
+
+        header {
+            background-color: #000;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
+
+        header h1 {
+            color: #0f0;
+            margin: 0;
+        }
+
+        header .close-btn {
+            color: #d1d1d1;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
         .container {
             padding: 20px;
         }
+
         .section {
-            margin-bottom: 20px;
+            margin-bottom: 30px;
             padding: 15px;
-            border: 1px solid #00ff88;
+            background-color: #333;
             border-radius: 8px;
-            background-color: #1e1e1e;
         }
+
         .section h2 {
-            margin: 0 0 10px;
-            font-size: 18px;
+            color: #0f0;
+            margin-bottom: 10px;
         }
-        .button {
+
+        .info-box {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .info-box div {
+            flex: 1;
+            margin: 0 10px;
+            text-align: center;
+        }
+
+        .info-box div span {
             display: block;
-            text-align: center;
-            padding: 10px;
-            background-color: #00ff88;
-            color: #121212;
+            font-size: 20px;
             font-weight: bold;
-            text-decoration: none;
-            border-radius: 5px;
-            margin-top: 10px;
         }
-        .button:hover {
-            background-color: #00cc66;
-        }
-        .footer {
+
+        .mining-status {
             text-align: center;
+        }
+
+        .mining-status button {
+            padding: 10px 20px;
+            background-color: #0f0;
+            color: #000;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .mining-status button:hover {
+            background-color: #0c0;
+        }
+
+        .latest-blocks {
+            margin-top: 20px;
+        }
+
+        .latest-blocks div {
             padding: 10px;
-            font-size: 14px;
-            color: #888;
-            border-top: 1px solid #00ff88;
+            background-color: #444;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        .latest-blocks div span {
+            display: block;
+            color: #0f0;
+            font-weight: bold;
+        }
+
+        footer {
+            background-color: #000;
+            color: #0f0;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        footer a {
+            color: #0f0;
+            margin: 0 10px;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        Miner Bot Dashboard
-    </div>
+    <header>
+        <h1>Miner Bot</h1>
+        <div class="close-btn">بستن</div>
+    </header>
+
     <div class="container">
-        <!-- پروفایل -->
+        <!-- My Profile Section -->
         <div class="section">
             <h2>My Profile</h2>
-            <p><strong>Balance:</strong> 1,924.141</p>
-            <p><strong>Energy:</strong> 24,050</p>
+            <div class="info-box">
+                <div>
+                    <span id="balance">1,924.141</span>
+                    Balance
+                </div>
+                <div>
+                    <span id="energy">24,050</span>
+                    Energy
+                </div>
+            </div>
         </div>
 
-        <!-- اطلاعات بلوک -->
+        <!-- Information Section -->
         <div class="section">
-            <h2>Block Information</h2>
-            <p><strong>Current Block:</strong> #721,189</p>
-            <p><strong>Difficulty:</strong> 106.8K</p>
-            <p><strong>Reward per Block:</strong> 1,237</p>
+            <h2>Information</h2>
+            <div class="info-box">
+                <div>
+                    <span id="block-number">721,189</span>
+                    Block
+                </div>
+                <div>
+                    <span id="difficulty">106.8K</span>
+                    Difficulty
+                </div>
+                <div>
+                    <span id="reward">1,237</span>
+                    Reward
+                </div>
+                <div>
+                    <span id="online-nodes">23.7K</span>
+                    Online
+                </div>
+            </div>
         </div>
 
-        <!-- وضعیت ماینینگ -->
+        <!-- Mining Status Section -->
         <div class="section">
-            <h2>Mining Status</h2>
-            <p><strong>Status:</strong> Waiting</p>
-            <p><strong>Shares:</strong> 0</p>
-            <p><strong>Hashes:</strong> 0</p>
-            <p><strong>Earned:</strong> 0</p>
-            <a href="#" class="button" id="start-mining">Start Mining</a>
+            <h2>Mining</h2>
+            <div class="mining-status">
+                <p>Status: <span id="mining-status" style="color: yellow;">Waiting</span></p>
+                <p>Shares: <span id="shares">0</span></p>
+                <p>Hashes: <span id="hashes">0</span></p>
+                <p>Earned: <span id="earned">0</span></p>
+                <button onclick="startMining()">→ Start Mining ←</button>
+            </div>
+        </div>
+
+        <!-- Latest Blocks Section -->
+        <div class="section latest-blocks">
+            <h2>Latest Blocks</h2>
+            <div>
+                <span>Block #721,188</span>
+                My Reward → 0
+                <br>
+                Created by Raul
+            </div>
+            <div>
+                <span>Block #721,187</span>
+                My Reward → 0
+                <br>
+                Created by Yusuf010
+            </div>
         </div>
     </div>
-    <div class="footer">
-        © 2025 Miner Bot
-    </div>
+
+    <footer>
+        <a href="#">MINING</a>
+        <a href="#">UPGRADE</a>
+        <a href="#">TASKS</a>
+        <a href="#">STATS</a>
+        <a href="#">WALLET</a>
+    </footer>
+
+    <script>
+        function startMining() {
+            document.getElementById('mining-status').textContent = "Mining";
+            document.getElementById('mining-status').style.color = "green";
+            alert("Mining started!");
+        }
+    </script>
 </body>
 </html>
