@@ -1,32 +1,41 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Miner Bot</title>
+    <title>Miner Interface</title>
     <style>
         body {
-            background: linear-gradient(to bottom, #2c2c2c, #121212);
-            color: #a3ffa1;
+            background-color: #1e1e2f;
+            color: white;
             font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
+            text-align: center;
+            margin-top: 50px;
         }
-        h1 {
-            font-size: 3rem;
+        button {
+            background-color: #00b894;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            margin-top: 20px;
         }
-        p {
-            font-size: 1.2rem;
+        button:hover {
+            background-color: #00a078;
         }
     </style>
 </head>
 <body>
-    <h1>Miner Bot</h1>
-    <p>Welcome to the Miner Bot Web Interface!</p>
+    <h1>Welcome to the Miner Interface</h1>
+    <p>Click the button below to start mining:</p>
+    <button onclick="startMining()">Start Mining</button>
+
+    <script>
+        function startMining() {
+            alert("Mining has started! Check the Telegram bot for updates.");
+        }
+    </script>
 </body>
 </html>
